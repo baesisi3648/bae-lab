@@ -5,31 +5,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>bae lab — 게임으로 배우는 생명과학</title>
 <meta name="description" content="수업에서 바로 쓰는 생명과학 게임 모음. 모둠 대결 보드게임과 베팅 레이스." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230a0a0a'/%3E%3Ccircle cx='12' cy='13' r='1.8' fill='%23fff'/%3E%3Ccircle cx='20' cy='13' r='1.8' fill='%23fff'/%3E%3Cpath d='M 11 20 Q 16 23.5 21 20' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' fill='none'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' shape-rendering='crispEdges'%3E%3Crect width='10' height='10' fill='%233d2b17'/%3E%3Crect x='2' y='3' width='2' height='2' fill='%23f4e4c1'/%3E%3Crect x='6' y='3' width='2' height='2' fill='%23f4e4c1'/%3E%3Crect x='2' y='6' width='1' height='1' fill='%23f4e4c1'/%3E%3Crect x='3' y='7' width='4' height='1' fill='%23f4e4c1'/%3E%3Crect x='7' y='6' width='1' height='1' fill='%23f4e4c1'/%3E%3C/svg%3E" />
 
 <style>
+/* ── 갈무리 도트 폰트 (SIL OFL, fonts/GALMURI-LICENSE.txt) ── */
 @font-face {
-  font-family: "Pretendard Variable";
-  font-weight: 45 920;
-  font-style: normal;
+  font-family: "Galmuri11";
+  font-weight: 400;
   font-display: swap;
-  src: url("./fonts/PretendardVariable.woff2") format("woff2-variations");
+  src: url("./fonts/Galmuri11.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Galmuri11";
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/Galmuri11-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Galmuri14";
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/Galmuri14.woff2") format("woff2");
+}
+@font-face {
+  font-family: "GalmuriMono11";
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/GalmuriMono11.woff2") format("woff2");
 }
 
 /* ── 디자인 토큰 ─────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #666666;
-  --border: #eaeaea;
+  /* 양피지 · 나무 */
+  --paper:      #f4e4c1;
+  --paper-hi:   #fdf4dd;
+  --paper-card: #fbeed0;
+  --ink:        #3d2b17;
+  --wood:       #8b5a2b;
+  --muted:      #6b5133;
+  --line:       #c9a877;
 
-  --font-sans: "Pretendard Variable", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* 포인트 */
+  --sky:   #5fc9f8;
+  --grass: #7ac74f;
+  --gold:  #f2b233;
 
-  --pad: 1.5rem;
+  /* 도트 폰트는 네이티브 크기의 정수배에서만 또렷합니다.
+     Galmuri11 → 11 / 22 / 33px,  Galmuri14 → 14 / 28 / 42 / 56px */
+  --font-title: "Galmuri14", "Galmuri11", monospace;
+  --font-body:  "Galmuri11", monospace;
+  --font-mono:  "GalmuriMono11", "Galmuri11", monospace;
+
+  --pad: 16px;
 }
-@media (min-width: 768px) { :root { --pad: 3rem; } }
-@media (min-width: 1024px) { :root { --pad: 5rem; } }
+@media (min-width: 768px)  { :root { --pad: 32px; } }
+@media (min-width: 1024px) { :root { --pad: 48px; } }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -39,208 +69,363 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  letter-spacing: -0.011em;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+
+  background-color: var(--paper);
+  background-image: radial-gradient(rgba(139, 90, 43, 0.13) 1px, transparent 1px);
+  background-size: 6px 6px;
+
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 22px;
+  line-height: 36px;
+
+  /* 도트가 뭉개지지 않도록 안티에일리어싱을 끕니다 */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
 }
 
-::selection { background: var(--foreground); color: var(--background); }
+img, svg { image-rendering: pixelated; }
+
+::selection { background: var(--ink); color: var(--paper); }
 
 a { color: inherit; text-decoration: none; }
 ul { list-style: none; }
 
-/* ── 헤더 ────────────────────────────────────── */
+/* ── 헤더 (나무 표지판) ──────────────────────── */
 header {
-  padding: 2rem var(--pad) 1rem;
+  padding: 14px var(--pad);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  background: var(--wood);
+  border-bottom: 4px solid var(--ink);
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.22),
+              inset 0 -3px 0 rgba(61, 43, 23, 0.35);
 }
 
-.brand { display: flex; align-items: center; gap: 0.625rem; }
+.brand { display: flex; align-items: center; gap: 10px; }
 
 .avatar {
-  width: 36px; height: 36px;
+  width: 32px; height: 32px;
   flex-shrink: 0;
-  border-radius: 9999px;
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--paper-hi);
+  color: var(--ink);          /* 픽셀 얼굴 색 (svg fill=currentColor) */
+  border: 3px solid var(--ink);
   display: flex; align-items: center; justify-content: center;
+  box-shadow: 3px 3px 0 rgba(61, 43, 23, 0.4);
 }
-.avatar svg { width: 50%; height: 50%; }
+.avatar svg { width: 20px; height: 20px; display: block; }
 
-.brand span { font-size: 1.125rem; font-weight: 700; letter-spacing: -0.025em; }
-
-nav { display: flex; align-items: center; gap: 1.75rem; font-size: 0.875rem; font-weight: 500; color: var(--muted); }
-nav a { transition: color 0.2s; }
-nav a:hover { color: var(--foreground); }
-
-/* ── 본문 ────────────────────────────────────── */
-main { flex: 1; width: 100%; padding: 4rem var(--pad); }
-@media (min-width: 768px) { main { padding: 6rem var(--pad); } }
-
-.hero { max-width: 64rem; margin-bottom: 6rem; }
-@media (min-width: 768px) { .hero { margin-bottom: 8rem; } }
-
-.hero h1 {
-  font-size: 3rem;
-  font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: 1.02;
+.brand .name {
+  font-size: 22px;
+  line-height: 22px;
+  color: var(--paper-hi);
+  text-shadow: 2px 2px 0 rgba(61, 43, 23, 0.75);
 }
-@media (min-width: 768px) { .hero h1 { font-size: 4.5rem; } }
-@media (min-width: 1024px) { .hero h1 { font-size: 6rem; } }
 
-.hero h1 .dim { color: var(--muted); }
-
-.hero p {
-  margin-top: 2.5rem;
-  max-width: 42rem;
-  font-size: 1.125rem;
-  line-height: 1.75;
-  color: var(--muted);
-}
-@media (min-width: 768px) { .hero p { font-size: 1.25rem; } }
-
-.stats {
-  margin-top: 2.5rem;
+nav {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 20px;
   font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-size: 11px;
+  line-height: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+nav a {
+  color: var(--paper);
+  padding: 6px 8px;
+  border: 2px solid transparent;
+}
+nav a:hover {
+  color: var(--ink);
+  background: var(--gold);
+  border-color: var(--ink);
+}
+
+/* ── 본문 ────────────────────────────────────── */
+main { flex: 1; width: 100%; padding: 48px var(--pad); }
+@media (min-width: 768px) { main { padding: 72px var(--pad); } }
+
+.hero { max-width: 1024px; margin-bottom: 72px; }
+@media (min-width: 768px) { .hero { margin-bottom: 96px; } }
+
+.hero h1 {
+  font-family: var(--font-title);
+  font-size: 28px;
+  line-height: 42px;
+  font-weight: 400;
+  text-shadow: 3px 3px 0 var(--line);
+}
+@media (min-width: 768px)  { .hero h1 { font-size: 42px; line-height: 60px; } }
+@media (min-width: 1024px) { .hero h1 { font-size: 56px; line-height: 80px; } }
+
+.hero h1 .dim { color: var(--wood); }
+
+.hero p {
+  margin-top: 28px;
+  max-width: 640px;
   color: var(--muted);
 }
-.stats .sep { color: var(--border); }
+
+/* 픽셀 점선 구분줄 */
+.rule {
+  margin-top: 28px;
+  height: 4px;
+  background-image: linear-gradient(90deg, var(--line) 50%, transparent 50%);
+  background-size: 8px 4px;
+}
+
+.stats {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.stats .dot { color: var(--grass); }
 
 /* ── 섹션 ────────────────────────────────────── */
-section + section { margin-top: 6rem; }
+section + section { margin-top: 72px; }
 
 .section-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  padding-bottom: 12px;
+  border-bottom: 4px solid var(--line);
 }
 .section-head h2 {
-  font-size: 0.875rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 11px;
+  font-weight: 400;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
 }
-.section-head .note { font-size: 0.875rem; color: var(--muted); }
+.section-head h2::before { content: "◆ "; color: var(--grass); letter-spacing: 0; }
+.section-head .note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 11px;
+  color: var(--muted);
+}
 
-/* ── 카드 그리드 ─────────────────────────────── */
+/* ── 카드 그리드 (퀘스트 창) ─────────────────── */
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 20px;
 }
 @media (min-width: 768px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 
 .card {
   height: 100%;
-  padding: 1.75rem;
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  background: var(--background);
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s, transform 0.2s;
-}
-a.card:hover, .card:hover { border-color: var(--foreground); transform: translateY(-2px); }
 
-.card-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
-.card h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+  background: var(--paper-card);
+  border: 4px solid var(--ink);
+  /* 안쪽 밝은 테두리 = 이중선 프레임 */
+  box-shadow: inset 0 0 0 3px var(--paper-hi),
+              inset 0 -8px 0 rgba(139, 90, 43, 0.13),
+              6px 6px 0 rgba(61, 43, 23, 0.28);
+
+  transition: transform 0.08s steps(2), box-shadow 0.08s steps(2);
+}
+a.card:hover {
+  transform: translate(-2px, -4px);
+  box-shadow: inset 0 0 0 3px var(--paper-hi),
+              inset 0 -8px 0 rgba(139, 90, 43, 0.13),
+              10px 10px 0 rgba(61, 43, 23, 0.28);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+/* 메이플 아이템 슬롯 느낌의 작은 픽셀 칸 */
+.card-top::before {
+  content: "";
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+  background: var(--sky);
+  border: 3px solid var(--ink);
+  box-shadow: inset -3px -3px 0 rgba(61, 43, 23, 0.22);
+}
+
+.card h3 {
+  font-family: var(--font-title);
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: 400;
+}
 
 .badge {
   font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 600;
-  padding: 0.125rem 0.5rem;
-  border: 1px solid var(--foreground);
-  border-radius: 9999px;
+  font-size: 11px;
+  line-height: 11px;
+  letter-spacing: 1px;
+  padding: 5px 7px;
+  color: #12300a;
+  background: var(--grass);
+  border: 3px solid var(--ink);
+  box-shadow: inset -3px -3px 0 rgba(61, 43, 23, 0.2);
 }
-.badge.wip { border-color: var(--border); color: var(--muted); }
+.badge.wip { background: var(--line); color: var(--ink); }
 
-.card p { font-size: 0.9375rem; line-height: 1.7; color: var(--muted); }
+.card p { color: var(--muted); }
 
 .card-foot {
   margin-top: auto;
-  padding-top: 1.25rem;
+  padding-top: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 0.75rem;
+  gap: 6px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 11px;
+  line-height: 11px;
   color: var(--muted);
 }
+.tags span {
+  padding: 5px 7px;
+  background: rgba(139, 90, 43, 0.11);
+  border: 2px solid var(--line);
+}
 
-.visit { flex-shrink: 0; font-size: 0.875rem; font-weight: 500; color: var(--muted); transition: color 0.2s; }
-a.card:hover .visit { color: var(--foreground); }
+.visit {
+  flex-shrink: 0;
+  font-size: 22px;
+  line-height: 22px;
+  color: var(--wood);
+}
+a.card:hover .visit { color: var(--ink); }
 
-/* 링크가 두 개인 카드 */
-.links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+/* 링크가 두 개인 카드 — 픽셀 버튼 */
+.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .link-chip {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  padding: 0.5rem 0.875rem;
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  color: var(--muted);
-  transition: border-color 0.2s, color 0.2s;
+  font-size: 22px;
+  line-height: 22px;
+  padding: 8px 12px;
+
+  background: var(--sky);
+  color: #072d43;
+  border: 3px solid var(--ink);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.45),
+              4px 4px 0 rgba(61, 43, 23, 0.32);
+
+  transition: transform 0.06s steps(2), box-shadow 0.06s steps(2);
 }
-.link-chip:hover { border-color: var(--foreground); color: var(--foreground); }
+.link-chip:hover { background: var(--gold); }
+.link-chip:active {
+  transform: translate(4px, 4px);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.45);
+}
 
 /* 준비 중 카드 */
 .card.soon {
-  border-style: dashed;
   min-height: 180px;
   align-items: center;
   justify-content: center;
   text-align: center;
-}
-.card.soon:hover { border-color: var(--border); transform: none; }
-.card.soon h3 { font-size: 1.25rem; color: var(--muted); }
-.card.soon p { margin-top: 0.5rem; font-size: 0.875rem; }
 
-/* ── 사용법 ──────────────────────────────────── */
-.steps { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--line);
+  box-shadow: none;
+}
+.card.soon:hover { transform: none; box-shadow: none; }
+.card.soon h3 { font-size: 28px; color: var(--line); }
+.card.soon p { margin-top: 10px; color: var(--line); }
+
+/* ── 사용법 (퀘스트 목록) ────────────────────── */
+.steps { display: grid; grid-template-columns: 1fr; gap: 20px; }
 @media (min-width: 768px) { .steps { grid-template-columns: repeat(3, 1fr); } }
 
-.step { padding: 1.5rem 0; border-top: 1px solid var(--border); }
-.step .num { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
-.step h4 { margin-top: 0.5rem; font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.02em; }
-.step p { margin-top: 0.5rem; font-size: 0.9375rem; line-height: 1.7; color: var(--muted); }
-.step code { font-family: var(--font-mono); font-size: 0.8125rem; }
+.step {
+  padding: 20px;
+  background: rgba(253, 244, 221, 0.6);
+  border: 3px solid var(--line);
+}
+.step .num {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 11px;
+  padding: 6px 8px;
+  color: var(--paper-hi);
+  background: var(--wood);
+  border: 3px solid var(--ink);
+  box-shadow: inset -3px -3px 0 rgba(61, 43, 23, 0.3);
+}
+/* 3단 좁은 칸이라 크기 대신 굵기·색으로 위계를 줍니다 */
+.step h4 {
+  margin-top: 14px;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.step p { margin-top: 8px; color: var(--muted); }
+.step code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 5px;
+  background: rgba(139, 90, 43, 0.14);
+  border: 2px solid var(--line);
+}
 
-/* ── 푸터 ────────────────────────────────────── */
+/* ── 푸터 (나무 바닥) ────────────────────────── */
 footer {
-  padding: 2.5rem var(--pad);
-  border-top: 1px solid var(--border);
-  font-size: 0.875rem;
-  color: var(--muted);
+  padding: 20px var(--pad);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 12px;
   flex-wrap: wrap;
+
+  background: var(--wood);
+  border-top: 4px solid var(--ink);
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.22);
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 11px;
+  color: var(--paper);
 }
-footer a { transition: color 0.2s; }
-footer a:hover { color: var(--foreground); }
+footer a { color: var(--paper-hi); border-bottom: 2px solid transparent; }
+footer a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* 모션을 줄이도록 설정한 사용자에게는 튀는 움직임을 없앱니다 */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+  a.card:hover { transform: none; }
+}
 </style>
 </head>
 
@@ -249,13 +434,15 @@ footer a:hover { color: var(--foreground); }
 <header>
   <a class="brand" href="/">
     <span class="avatar" aria-label="bae lab">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="9" cy="10" r="1" fill="currentColor" />
-        <circle cx="15" cy="10" r="1" fill="currentColor" />
-        <path d="M 8.5 15 Q 12 17.5 15.5 15" />
+      <svg viewBox="0 0 10 10" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true">
+        <rect x="2" y="3" width="2" height="2" />
+        <rect x="6" y="3" width="2" height="2" />
+        <rect x="2" y="6" width="1" height="1" />
+        <rect x="3" y="7" width="4" height="1" />
+        <rect x="7" y="6" width="1" height="1" />
       </svg>
     </span>
-    <span>bae lab</span>
+    <span class="name">bae lab</span>
   </a>
   <nav>
     <a href="#games">Games</a>
@@ -274,12 +461,11 @@ footer a:hover { color: var(--foreground); }
       수업에서 그대로 쓰는 생명과학 게임 모음. 모둠으로 나눠 문제를 풀고,
       힌트로 추리하고, 코인을 겁니다. 설치 없이 링크만 열면 시작합니다.
     </p>
+    <div class="rule"></div>
     <div class="stats">
-      <span>2 live</span>
-      <span class="sep">·</span>
-      <span>1 building</span>
-      <span class="sep">·</span>
-      <span>since 2026</span>
+      <span><span class="dot">◆</span> 2 live</span>
+      <span><span class="dot">◆</span> 1 building</span>
+      <span><span class="dot">◆</span> since 2026</span>
     </div>
   </section>
 
@@ -307,7 +493,7 @@ footer a:hover { color: var(--foreground); }
               <span>모둠 대결</span>
               <span>퀴즈 50문항</span>
             </div>
-            <span class="visit">visit →</span>
+            <span class="visit">VISIT ▶</span>
           </div>
         </a>
       </li>
@@ -323,8 +509,8 @@ footer a:hover { color: var(--foreground); }
             1·2·3등을 추리해 코인을 겁니다. TV와 모둠 폰을 함께 씁니다.
           </p>
           <div class="links">
-            <a class="link-chip" href="https://script.google.com/macros/s/AKfycbyRHvpmemANRgY0Gf6I5FvRL7iKs0JrdYR7v0NkIfpZROOAaaStrWmGx4nDo0AKifo/exec?role=teacher" target="_blank" rel="noreferrer">교사 화면 (TV) →</a>
-            <a class="link-chip" href="https://script.google.com/macros/s/AKfycbyRHvpmemANRgY0Gf6I5FvRL7iKs0JrdYR7v0NkIfpZROOAaaStrWmGx4nDo0AKifo/exec" target="_blank" rel="noreferrer">학생 화면 (폰) →</a>
+            <a class="link-chip" href="https://script.google.com/macros/s/AKfycbyRHvpmemANRgY0Gf6I5FvRL7iKs0JrdYR7v0NkIfpZROOAaaStrWmGx4nDo0AKifo/exec?role=teacher" target="_blank" rel="noreferrer">교사 화면 (TV) ▶</a>
+            <a class="link-chip" href="https://script.google.com/macros/s/AKfycbyRHvpmemANRgY0Gf6I5FvRL7iKs0JrdYR7v0NkIfpZROOAaaStrWmGx4nDo0AKifo/exec" target="_blank" rel="noreferrer">학생 화면 (폰) ▶</a>
           </div>
           <div class="card-foot">
             <div class="tags">
